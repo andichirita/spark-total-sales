@@ -1,0 +1,19 @@
+{
+    "namespace": "kafka-transactions.avro",
+    "type": "record",
+    "name": "transaction",
+    "fields": [
+        {
+            "name": "distributor",
+            "type": "string"
+        },
+        {
+            "name": "pos",
+            "type": "string"
+        },
+        {
+            "name": "value",
+            "type": "int"
+        }
+    ]
+}
