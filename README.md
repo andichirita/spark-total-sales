@@ -1,4 +1,4 @@
-# spark-streaming-kafka
+# spark-total-sales
 An exercices of loading events to Kafka and processing them with Spark Streaming
 
 To run the demo: 
