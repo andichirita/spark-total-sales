@@ -1,5 +1,3 @@
-package util
-
 import scala.io.Source
 
 object Parser {

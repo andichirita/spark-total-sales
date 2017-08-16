@@ -1,6 +1,4 @@
-package util
-
-object Kafka {
+ object Kafka {
   val TOPIC = "sales"
-  val BROKER = "localhost:9092"
+  val BROKER = "127.0.0.1:9092"
 }

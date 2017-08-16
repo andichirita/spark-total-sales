@@ -33,11 +33,24 @@ object Consumer {
     val messages: InputDStream[(String, Array[Byte])] = KafkaUtils.createDirectStream[String, Array[Byte], StringDecoder, DefaultDecoder](
       ssc, kafkaParams, topicSet)
 
+    val deltaFunction = (key: String, value: Option[Int], state: State[Int]) => {
+      val currVal = value.getOrElse(0)
+      val prevVal = state.getOption.getOrElse(0)
+      var delta = 0
+      if (prevVal !=0) {
+        delta = 100 * (currVal - prevVal) / prevVal;
+      }
+      val output = (key, currVal, delta + "%")
+      state.update(currVal)
+      output
+    }
+
     val results = messages
       .map(serRecord => (serRecord._1, Serializer.des(serRecord._2)))
       .map(record => (record._1, Serializer.getTransaction(record._2)))
       .map(t => (t._1, t._2.value))
       .reduceByKeyAndWindow(_+_, WINDOW_LENGTH)
+      .mapWithState(StateSpec.function(deltaFunction))
       .checkpoint(SLIDE_INTERVAL)
 
     results.print()

@@ -1,5 +1,3 @@
-package util
-
 import java.io.ByteArrayOutputStream
 
 import org.apache.avro.Schema
