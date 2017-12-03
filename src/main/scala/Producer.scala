@@ -11,7 +11,7 @@ object Producer {
   def main(args: Array[String]) {
 
     val props = new util.HashMap[String, Object]()
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Kafka.BROKER)
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConfig.BROKER)
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArraySerializer")
     val producer = new KafkaProducer[String, Array[Byte]](props)
@@ -21,9 +21,9 @@ object Producer {
       val transaction = Parser.getTransaction(line)
       val record = Serializer.getRecord(transaction)
       val serializedRecord: Array[Byte] = Serializer.serialize(record)
-      val message = new ProducerRecord[String, Array[Byte]](Kafka.TOPIC, transaction.distributor, serializedRecord)
+      val message = new ProducerRecord[String, Array[Byte]](KafkaConfig.TOPIC, transaction.distributor, serializedRecord)
       producer.send(message)
-      val seconds = scala.util.Random.nextInt(5) + 1;
+      val seconds = scala.util.Random.nextInt(5) + 1
       val sleep = Seconds(seconds).milliseconds
       println(transaction, sleep)
       Thread.sleep(sleep)

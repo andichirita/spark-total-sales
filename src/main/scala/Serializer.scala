@@ -14,29 +14,6 @@ object Serializer {
   val writer = new SpecificDatumWriter[GenericRecord](schema)
   val reader = new SpecificDatumReader[GenericRecord](schema)
 
-
-  def main(args: Array[String]): Unit = {
-
-    val record = new GenericData.Record(schema)
-    record.put("distributor", "dist_c")
-    record.put("pos", "pos_3")
-    record.put("value", 1)
-
-    val out = new ByteArrayOutputStream()
-    val encoder = EncoderFactory.get().binaryEncoder(out, null)
-    writer.write(record, encoder)
-    encoder.flush()
-    out.close()
-
-    //from 53 bytes as json to 14 bytes as avro
-    val message : Array[Byte] = out.toByteArray()
-
-    // Deserialize and create generic record
-    val reader: DatumReader[GenericRecord] = new SpecificDatumReader[GenericRecord](schema)
-    val decoder: Decoder = DecoderFactory.get().binaryDecoder(message, null)
-    val readRecord: GenericRecord = reader.read(null, decoder)
-  }
-
   def getTransaction(record : GenericRecord): Transaction ={
     Transaction(record.get("distributor").toString,
       record.get("pos").toString,
@@ -60,7 +37,7 @@ object Serializer {
     out.toByteArray()
   }
 
-  def des(message : Array[Byte]): GenericRecord ={
+  def deserialize(message : Array[Byte]): GenericRecord ={
     val decoder = DecoderFactory.get().binaryDecoder(message, null)
     reader.read(null, decoder)
   }
